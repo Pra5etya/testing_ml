@@ -1,0 +1,5 @@
+note:
+penggunaan tuning pada setiap pilar machine learning berbeda:
+supervised learning: biasa menggunakan gridsearcgCV dan randomsearchCV
+unsupervised learning: biasa menggunakan parameter grid dan parametersampler
+
