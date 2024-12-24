@@ -1,5 +1,14 @@
 note:
 penggunaan tuning pada setiap pilar machine learning berbeda:
 supervised learning: biasa menggunakan gridsearcgCV dan randomsearchCV
-unsupervised learning: biasa menggunakan parameter grid dan parametersampler
+unsupervised learning: biasa menggunakan parametergrid dan parametersampler
 
+model regression
+robust regressor -> must know and how to
+
+pengecekan distribusi -> saphio wisk test
+
+transform   -> transformasi log
+            -> square root transform 
+            -> box cut transform
+            -> yeo jhonson transform

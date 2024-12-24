@@ -1,41 +1,37 @@
 # Complete Hyperparameter Grid for Regression Models in scikit-learn
 
-## Ridge Regression
+## Ridge Regression (Checked)
 ```python
 param_grid_ridge = {
     'model__alpha': [0.01, 0.1, 1, 10, 100],
-    'model__solver': ['auto', 'svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga'],
+    'model__max_iter': [50000, 100000, 200000],
+    'model__solver': ['auto', 'svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga', 'lbfgs'],
     'model__fit_intercept': [True, False],
-    'model__normalize': [True, False],  # Deprecated in v1.2, use preprocessing instead.
     'model__tol': [1e-4, 1e-3, 1e-2],
     'model__random_state': [None, 42],
-    'model__positive': [True, False]  # Enforces non-negative coefficients.
 }
 ```
 
-## Lasso Regression
+## Lasso Regression (Checked)
 ```python
 param_grid_lasso = {
     'model__alpha': [0.01, 0.1, 1, 10, 100],
     'model__fit_intercept': [True, False],
-    'model__normalize': [True, False],  # Deprecated in v1.2, use preprocessing instead.
-    'model__max_iter': [1000, 5000, 10000],
+    'model__max_iter': [50000, 100000, 200000],
     'model__tol': [1e-4, 1e-3, 1e-2],
     'model__selection': ['cyclic', 'random'],
     'model__random_state': [None, 42]
 }
 ```
 
-## ElasticNet
+## ElasticNet (Checked)
 ```python
 param_grid_elasticnet = {
     'model__alpha': [0.01, 0.1, 1, 10, 100],
     'model__l1_ratio': [0.1, 0.3, 0.5, 0.7, 0.9],
     'model__fit_intercept': [True, False],
-    'model__normalize': [True, False],  # Deprecated in v1.2.
-    'model__max_iter': [1000, 5000, 10000],
+    'model__max_iter': [50000, 100000, 200000],
     'model__tol': [1e-4, 1e-3, 1e-2],
-    'model__positive': [True, False],
     'model__random_state': [None, 42]
 }
 ```
