@@ -124,8 +124,175 @@ pipeline = Pipeline([
 
 
 
+# Robust Regression
 
+## 1. Huber Regressor
 
+### Apa itu Huber Regressor?
+Huber Regressor adalah model regresi yang robust terhadap outlier. Metode ini menggunakan **Huber Loss**, yang menggabungkan dua jenis fungsi loss:
+- **Squared loss** untuk error kecil.
+- **Absolute loss** untuk error besar.
+
+Fungsi loss ini memungkinkan Huber Regressor untuk memberikan penalti yang lebih kecil pada outlier dibandingkan dengan Least Squares Regression, yang bisa sangat dipengaruhi oleh outlier ekstrem.
+
+### Mengapa Huber Regressor digunakan?
+**Kelebihan:**
+- Efektif ketika ada outlier dalam dataset yang dapat merusak model regresi standar.
+- Memberikan penalti yang lebih stabil pada error besar dibandingkan dengan Least Squares Regression.
+
+**Penggunaan:**
+- Dataset dengan beberapa outlier moderat, seperti data keuangan, prediksi cuaca, atau data pengukuran eksperimen.
+
+### Contoh Implementasi
+```python
+from sklearn.linear_model import HuberRegressor
+from sklearn.datasets import make_regression
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+
+# Membuat dataset dengan outlier
+X, y = make_regression(n_samples=200, n_features=2, noise=10, random_state=42)
+y[::10] += 100  # Menambahkan outlier
+
+# Membagi dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Membuat pipeline
+pipeline = Pipeline(steps=[
+    ('preprocessor', ColumnTransformer([
+        ('scaler', StandardScaler(), [0, 1])
+    ])),
+    ('regressor', HuberRegressor())
+])
+
+# Melatih model
+pipeline.fit(X_train, y_train)
+
+# Evaluasi model
+print("Score Huber Regressor:", pipeline.score(X_test, y_test))
+```
+
+**Penjelasan Pipeline:**
+- `ColumnTransformer` digunakan untuk scaling fitur sebelum diteruskan ke model.
+- `StandardScaler` menstandarisasi fitur agar memiliki mean = 0 dan variansi = 1, sehingga algoritma bekerja lebih baik.
+
+---
+
+## 2. Theil-Sen Estimator
+
+### Apa itu Theil-Sen Estimator?
+Theil-Sen Estimator adalah metode regresi robust yang mengestimasi garis terbaik dengan menggunakan **median** dari kemiringan garis antara semua pasangan titik data. Karena menggunakan median, metode ini sangat tahan terhadap outlier ekstrem.
+
+### Mengapa Theil-Sen Estimator digunakan?
+**Kelebihan:**
+- Sangat robust terhadap outlier.
+- Ideal untuk data dengan noise tinggi atau nilai yang tidak biasa.
+
+**Penggunaan:**
+- Analisis data ilmiah atau teknik, seperti pengukuran fisika atau data ekologi.
+
+### Contoh Implementasi
+```python
+from sklearn.linear_model import TheilSenRegressor
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import make_regression
+from sklearn.model_selection import train_test_split
+
+# Membuat dataset dengan outlier
+X, y = make_regression(n_samples=200, n_features=2, noise=10, random_state=42)
+y[::10] += 100  # Menambahkan outlier
+
+# Membagi dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Membuat pipeline
+pipeline = Pipeline(steps=[
+    ('preprocessor', ColumnTransformer([
+        ('scaler', StandardScaler(), [0, 1])
+    ])),
+    ('regressor', TheilSenRegressor())
+])
+
+# Melatih model
+pipeline.fit(X_train, y_train)
+
+# Evaluasi model
+print("Score Theil-Sen Estimator:", pipeline.score(X_test, y_test))
+```
+
+**Penjelasan Pipeline:**
+- `ColumnTransformer` dan `StandardScaler` menstandarisasi data sebelum diteruskan ke model.
+
+---
+
+## 3. RANSAC
+
+### Apa itu RANSAC?
+RANSAC (RANdom SAmple Consensus) adalah algoritma yang sangat robust terhadap outlier. Algoritma ini memilih subset acak dari data, mengestimasi model, lalu memeriksa seberapa banyak data yang sesuai dengan model tersebut (inliers). Proses ini diulang untuk menemukan model terbaik.
+
+### Mengapa RANSAC digunakan?
+**Kelebihan:**
+- Sangat efektif untuk dataset dengan banyak outlier ekstrem.
+- Dapat mengidentifikasi subset data yang relevan untuk membangun model representatif.
+
+**Penggunaan:**
+- Data dengan kesalahan sensor atau noise tinggi, seperti pengolahan citra atau data geospasial.
+
+### Contoh Implementasi
+```python
+from sklearn.linear_model import RANSACRegressor
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import make_regression
+from sklearn.model_selection import train_test_split
+
+# Membuat dataset dengan outlier
+X, y = make_regression(n_samples=200, n_features=2, noise=10, random_state=42)
+y[::10] += 100  # Menambahkan outlier
+
+# Membagi dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Membuat pipeline
+pipeline = Pipeline(steps=[
+    ('preprocessor', ColumnTransformer([
+        ('scaler', StandardScaler(), [0, 1])
+    ])),
+    ('regressor', RANSACRegressor())
+])
+
+# Melatih model
+pipeline.fit(X_train, y_train)
+
+# Evaluasi model
+print("Score RANSAC Regressor:", pipeline.score(X_test, y_test))
+```
+
+**Penjelasan Pipeline:**
+- `ColumnTransformer` memastikan data sudah distandarisasi sebelum diteruskan ke model.
+
+---
+
+## Kesimpulan
+
+| **Metode Regresi**      | **Kelebihan**                                                                 | **Kekurangan**                                                | **Jenis Dataset yang Cocok**                                                  |
+|-------------------------|-------------------------------------------------------------------------------|----------------------------------------------------------------|--------------------------------------------------------------------------------|
+| **Huber Regressor**     | Robust terhadap outlier moderat.                                             | Sensitif terhadap outlier yang sangat ekstrem.                 | Dataset dengan beberapa outlier moderat.                                      |
+|                         | Lebih efisien secara komputasi dibandingkan RANSAC.                          | Tidak seefektif Theil-Sen untuk banyak outlier.                | Data keuangan atau eksperimen dengan noise sedang.                            |
+| **Theil-Sen Estimator** | Sangat robust terhadap outlier ekstrem.                                      | Kurang efisien untuk dataset besar.                            | Dataset dengan banyak outlier ekstrem, seperti data ilmiah.                   |
+|                         | Menggunakan median kemiringan, tidak terpengaruh outlier.                   | Tidak cocok untuk data yang sangat bersih.                     | Data dengan noise tinggi atau kesalahan pengukuran.                           |
+| **RANSAC**              | Efektif untuk dataset dengan banyak outlier ekstrem.                        | Kinerja buruk jika proporsi inliers kecil.                     | Dataset dengan banyak outlier dan kesalahan besar, seperti data sensor.       |
+
+**Rekomendasi Penggunaan:**
+- **Huber Regressor:** Untuk dataset yang mengandung outlier moderat dan ukuran data cukup besar.
+- **Theil-Sen Estimator:** Untuk data dengan noise tinggi atau banyak outlier ekstrem.
+- **RANSAC:** Untuk data yang sangat bising dengan outlier ekstrem dan banyak data tidak relevan.
 
 
 
