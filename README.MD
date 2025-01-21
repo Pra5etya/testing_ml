@@ -16,24 +16,26 @@ Data preprocessing adalah langkah penting dalam analisis data untuk memastikan b
    - Contoh: Membuat fitur `age` dari `year_built` atau mengekstraksi komponen tanggal dari kolom waktu.
 
 ## Script for Basic Visualization Component (Cleaned Data):
-4. **Filter Outlier**:
+4. **Cek Distribusi Data**:
+   - Gunakan histogram atau uji statistik untuk memastikan normalitas data.
+   - Metode: Histogram, Q-Q plot, uji Shapiro-Wilk.
+
+5. **Transformasi Data**:
+   - Perbaiki distribusi data yang skewed (positif/negatif) dengan transformasi log, square root, Box-Cox, atau Yeo-Johnson.
+   - Contoh: `np.log1p(data)` untuk log transform.
+   - Contoh: `sns.histplot(data=...)` atau `scipy.stats.shapiro(data)`.
+
+6. **Filter Outlier**:
    - Identifikasi dan atasi nilai ekstrem yang dapat memengaruhi model.
    - Metode: IQR, Z-Score, atau visualisasi seperti boxplot.
    - Contoh: `sns.boxplot(data=...)` menggunakan Seaborn.
 
-5. **Cek Distribusi Data**:
-   - Gunakan histogram atau uji statistik untuk memastikan normalitas data.
-   - Metode: Histogram, Q-Q plot, uji Shapiro-Wilk.
-   - Contoh: `sns.histplot(data=...)` atau `scipy.stats.shapiro(data)`.
-
-6. **Cek Data Correlations**:
+7. **Cek Data Correlations**:
    - Lakukan pengecekan korelasi antar kolom untuk memahami hubungan antar variabel.
    - Metode: Heatmap, nilai korelasi Pearson atau Spearman.
    - Contoh: `sns.heatmap(data.corr(), annot=True)` menggunakan Seaborn.
 
-7. **Transformasi Data**:
-   - Perbaiki distribusi data yang skewed (positif/negatif) dengan transformasi log, square root, Box-Cox, atau Yeo-Johnson.
-   - Contoh: `np.log1p(data)` untuk log transform.
+## Script for Basic model Component (Model Data):
 
 8. **Encoding Variabel Kategorikal**:
     - Transformasikan kategori menjadi numerik menggunakan label encoding atau one-hot encoding.
